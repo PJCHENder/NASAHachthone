@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Intro</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="../styles/index.processed.css">
+    <style>
+    .header {
+        position: relative;
+        padding: 100px 50px 200px;
+        background-image: url('https://raw.githubusercontent.com/PJCHENder/NASAHachthone/master/img/bg_intro.jpg');
+    }
+    
+    .title {
+        position: absolute;
+        width: 252px;
+        top: 20%;
+        left: calc(50% - 126px);
+    }
+    
+    .next-step {
+        position: absolute;
+        bottom: 25%;
+        opacity: 0;
+    }
+    
+    .btn {
+        border-radius: 15px;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation--><a class="btn btn-dark btn-lg toggle" id="menu-toggle" href="#"><i class="fa fa-bars"></i></a>
+    <nav id="sidebar-wrapper">
+        <ul class="sidebar-nav"><a class="btn btn-light btn-lg pull-right toggle" id="menu-close" href="#"><i class="fa fa-times"></i></a>
+            <li class="sidebar-brand"><a href="#top">Start Trips</a></li>
+            <li><a href="#top">Adventure</a></li>
+            <li><a href="#about">Help</a></li>
+        </ul>
+    </nav>
+    <!-- Header-->
+    <header class="header" id="top">
+        <div class="text-vertical-center">
+            <h1 class='title'>旅程說明</h1>
+            <div class="next-step col-md-4 col-md-offset-4">
+                <a class="btn btn-block btn-dark btn-lg" href="stop.html">開始旅程</a>
+            </div>
+        </div>
+    </header>
+    <audio id="audio"></audio>
+    <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function() {
+
+        $(document).on('click', function(){
+          window.location = "stop.html"
+        })
+        $(document).on('keyup', function(e){
+          if (e.keyCode === 32) {
+            window.location = "stop.html"
+          }
+        })
+
+        let url = `http://api.voicerss.org/?key=b9ee185dd0394b7aa4e062e891e28b15&hl=zh-tw&r=6&src=`
+        let speechContent = `Hi 旅行者,歡迎來到旅遊導覽，希望你能為登上terra感到自豪，我來為您說明等一下的互動資訊操作,
+隨著衛星移動，您會移動到不同位置，每個站，您都可以選擇了解地球表面的情況或是環顧四周了解有沒有特殊的事情發生，為您說明以下按鈕,按空白鍵表示了解地球表面情況,按向上鍵表示向下ㄧ個點前進,按向左向右或項下鍵表示探索衛星四周的空間,按ESC鍵表示退回上一層。若你明白了，請按空白鍵開始進入旅程，或按任意方向鍵重複聽取說明。`
+        const audioElement = document.getElementById('audio')
+        audioElement.setAttribute('src', url + speechContent)
+        audioElement.play()
+        audioElement.addEventListener('ended', function(e) {
+            let nextStepBtn = $('.next-step')
+            nextStepBtn.animate({
+                opacity: 1
+            }, function() {
+                setTimeout(function() {
+                    nextStepBtn.addClass('tada animated infinite')
+                }, 3000)
+            })
+        })
+    })
+    </script>
+</body>
+
+</html>

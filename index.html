@@ -4,40 +4,48 @@
 <head>
   <!-- Meta-->
   <meta charset="UTF-8">
-  <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Earth Tour for Blindness</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="styles/index.processed.css">
+  <style type="text/css">
+    
+    .select{
+      padding: 15px 30px;
+    }
+  </style>
 </head>
 
 <body>
   <!-- Navigation--><a class="btn btn-dark btn-lg toggle" id="menu-toggle" href="#"><i class="fa fa-bars"></i></a>
   <nav id="sidebar-wrapper">
     <ul class="sidebar-nav"><a class="btn btn-light btn-lg pull-right toggle" id="menu-close" href="#"><i class="fa fa-times"></i></a>
-      <li class="sidebar-brand"><a href="#top" onclick="$(">Start Bootstrap</a></li>
-      <li><a href="#top" onclick="$(">Home</a></li>
-      <li><a href="#about" onclick="$(">About</a></li>
-      <li><a href="#services" onclick="$(">Services</a></li>
-      <li><a href="#portfolio" onclick="$(">Portfolio</a></li>
-      <li><a href="#contact" onclick="$(">Contact</a></li>
+      <li class="sidebar-brand"><a href="#top">Start Trips</a></li>
+      <li><a href="#top">Adventure</a></li>
+      <li><a href="#about">Help</a></li>
     </ul>
   </nav>
   <!-- Header-->
   <header class="header" id="top">
     <div class="text-vertical-center">
-      <h1>Start Bootstrap</h1>
-      <h3>Free Bootstrap Themes & Templates</h3><br><a class="btn btn-dark btn-lg" href="#about">Find Out More</a></div>
+      <h1>駕著衛星，開啟你的世界旅程</h1>
+      <h3>專為視障者設計</h3><br>
+      <div class="btn-group">
+          <a class="first-btn select btn btn-dark btn-lg" href="trip/intro.html">開始旅程</a>
+          <a class="select btn btn-dark btn-lg" href="#adventrue">冒險遊戲</a>
+          <a class="select btn btn-dark btn-lg" href="#help">尋求協助</a>
+          </div>
+    </div>          
   </header>
   <!-- About-->
   <section class="about" id="about">
     <div class="container">
       <div class="row">
         <div class="col-lg-12 text-center">
-          <h2>Stylish Portfolio is the perfect theme for your next project!</h2>
-          <p class="lead">This theme features some wonderful photography courtesy of <a target="_blank" href="http://join.deathtothestockphoto.com/">Death to the Stock Photo</a>.</p>
+          <h2>跟著衛星，探索世界各地</h2>
+          <p class="lead">透過社群的力量，帶領視障者</p>
         </div>
       </div>
       <!-- /.row-->
@@ -159,9 +167,17 @@
   <!-- Scripts-->
   <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>
   <script src="https://unpkg.com/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
-  <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
-  <script src="/scripts/components.js"></script>
-  <script src="/scripts/app.js"></script>
+  <script src="./scripts/index.js"></script>
+  <script type="text/javascript">
+    $(document).on('keyup', function(e){
+      e.preventDefault()
+      e.stopPropagation()
+
+      if (e.keyCode === 32) {
+        window.location = "trip/intro.html"
+      }
+    })
+  </script>
 </body>
 
 </html>

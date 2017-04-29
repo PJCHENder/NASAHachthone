@@ -5,6 +5,7 @@
  */
 
 /* Global Styles */
+$random-number: random(300);
 
 html,
 body {
@@ -16,6 +17,27 @@ body {
     font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+// PJCHENDER:START
+.select + .select {
+  border-left: 1px solid rgba(0,0,0,0.4);
+}
+.first-btn {
+  border-radius: 15px 0px 0px 15px !important;
+}
+.select:last-child {
+  border-radius: 0px 15px 15px 0px;
+}
+
+.text-vertical-center h1, .text-vertical-center h3{
+    color: rgb(255, 255, 255);
+}
+
+.btn-lg {
+  padding: 15px;
+}
+
+
+// PJCHENDER:END
 .text-vertical-center {
     display: table-cell;
     text-align: center;
@@ -155,7 +177,7 @@ hr.small {
     position: relative;
     width: 100%;
     height: 100%;
-    background: url('https://raw.githubusercontent.com/PJCHENder/NASAHachthone/master/img/bg.jpg') no-repeat center center scroll;
+  background: url('https://raw.githubusercontent.com/PJCHENder/NASAHachthone/master/img/bg.jpg?#{$random-number}') no-repeat right center scroll;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
