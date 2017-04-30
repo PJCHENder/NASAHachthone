@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Adventure</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/index.processed.css">
+    <style>
+    #app {
+        width: 100%;
+        height: 100%;
+    }
+    
+    .header {
+        padding: 100px 50px 200px;
+        background-image: url('../img/bg_intro.jpg');
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    
+    .panel-custom {
+        padding-top: 250px;
+    }
+
+    .select {
+        position: relative;
+    }
+    .btn-group{
+        position:relative;
+    }
+    .tooltip {
+        width: 200px;
+        height: 200px;
+        top: 10px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        border-radius: 10px;
+        position: absolute;
+    }
+    .terra-tooltip {
+        background-image: url('../img/terra.png');
+        left: 80px;
+        opacity: 0;
+    }
+    .aqua-tooltip{
+        background-image: url('../img/acqua.png');
+        left: 350px;
+        opacity: 0;
+    }
+    .suomi-tooltip{
+        background-image: url('../img/suomi.png');
+        left: 620px;
+        opacity: 0;
+    }
+    
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- Navigation-->
+        <a class="btn btn-dark btn-lg toggle" id="menu-toggle" href="#"><i class="fa fa-bars"></i></a>
+        <nav id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <a class="btn btn-light btn-lg pull-right toggle" id="menu-close" href="#">
+                    <i class="fa fa-times"></i>
+                </a>
+                <li class="sidebar-brand"><a href="#top">Start Trips</a></li>
+                <li><a href="#top">Adventure</a></li>
+                <li><a href="#about">Help</a></li>
+            </ul>
+        </nav>
+        <!-- Header-->
+        <header class="header" id="top">
+            <div class="text-vertical-center">
+                <h1>選擇你想要探索的衛星</h1>
+                <br>
+
+                    <div class="panel-custom col-md-8 col-md-offset-2">
+                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                            <a data-tooltip="terra-tooltip" class="first-btn select btn btn-dark btn-lg" id="terra">Terra</a>
+                            <a data-tooltip="aqua-tooltip" class="select btn btn-dark btn-lg" id="aqua" href="#">Aqua</a>
+                            <a data-tooltip="suomi-tooltip" class="select btn btn-dark btn-lg" id="suomi" href="#">Suomi</a>
+                        </div>
+                        <div class="terra-tooltip tooltip"></div>
+                        <div class="aqua-tooltip tooltip"></div>
+                        <div class="suomi-tooltip tooltip"></div>
+                    </div>
+
+            </div>
+        </header>
+        
+        <audio id="audio"></audio>
+    </div>
+    <script src="https://unpkg.com/vue@2.3.0/dist/vue.js"></script>
+    <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <script>
+    /* eslint-disable */
+    function showTooltip (obj) {
+        console.log($(this).data().tooltip)
+
+        $(`.${$(this).data().tooltip}`).animate({opacity: 1})
+        console.log('show')
+
+    }
+    function hideTooltip () {
+        $(`.${$(this).data().tooltip}`).animate({opacity: 0})
+        console.log('hide')
+    }
+    $('#terra').hover(showTooltip, hideTooltip)
+    $('#aqua').hover(showTooltip, hideTooltip)
+    $('#suomi').hover(showTooltip, hideTooltip)
+    
+   
+    </script>
+</body>
+
+</html>
