@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Intro</title>
+    <title>Start Adventure</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../styles/index.processed.css">
@@ -47,9 +47,10 @@
     .panel-custom {
         padding-top: 50px;
     }
+    
     .showBox {
-      width: 100%;
-      height: 40%;
+        width: 100%;
+        height: 40%;
     }
     </style>
 </head>
@@ -69,18 +70,19 @@
         <header class="header" id="top">
             <div class="flex-box-container">
                 <div class="flex-box-item play-block">
-                    <h3>{{ satellite }}</h3>
+                    <h3>衛星名稱</h3>
                     <div class='showBox'>
-                        
                     </div>
                 </div>
             </div>
             <div class="panel-custom col-md-8 col-md-offset-2">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
                     <a class="first-btn select btn btn-dark btn-lg" id="backward">前往上一站</a>
-                    <a class="select btn btn-dark btn-lg" id="pause" href="#" data-toggle="modal" data-target="#myModal" @click="playAudio($event)">暫停</a>
-                    <a class="select btn btn-dark btn-lg" id="look-earth" href="#" data-toggle="modal" data-target="#myModal" @click="playAudio($event)">播放</a>
-                    <a class="select btn btn-dark btn-lg" id="next-step" href="#" @click="nextStop">前往下一站</a>
+                    <a class="select btn btn-dark btn-lg" id="pause" href="#" data-toggle="modal" data-target="#myModal" 
+                    >暫停</a>
+                    <a class="select btn btn-dark btn-lg" id="look-earth" href="#" data-toggle="modal" data-target="#myModal" 
+                    >播放</a>
+                    <a class="select btn btn-dark btn-lg" id="next-step" href="#">前往下一站</a>
                 </div>
             </div>
         </header>
@@ -92,7 +94,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">{{city}}</h4>
+                        <h4 class="modal-title" id="myModalLabel"> 城市 </h4>
                     </div>
                     <div class="modal-body" style="text-align:center">
                         <img style="width: 100%; height: auto" :src="imgSrc">
@@ -111,50 +113,66 @@
     const vm = new Vue({
         el: '#app',
         data: {
-            stops: [{
-                city: '紐約市',
-                imgSrc: `https://gibs.earthdata.nasa.gov/image-download?TIME=2015172&extent=-75.22668580843734,39.04868871773263,-71.71106080843734,42.56431371773263&epsg=4326&layers=MODIS_Aqua_CorrectedReflectance_TrueColor,Coastlines,Reference_Labels&opacities=1,1,1&worldfile=false&format=image/jpeg&width=400&height=400`,
-                speechContent: `紐約是美國人口最多的城市，世界最大的城市之一，紐約都會區的核心，一座對全球的經濟、商業、金融、媒體、政治、教育和娛樂具有極大影響力的國際大都會。`
-            }, {
-                city: '佛羅里達',
-                imgSrc: `https://gibs.earthdata.nasa.gov/image-download?TIME=2015172&extent=-83.31159342931242,25.039952971857545,-79.19831217931242,28.836827971857545&epsg=4326&layers=MODIS_Aqua_CorrectedReflectance_TrueColor,Coastlines,Reference_Labels&opacities=1,1,1&worldfile=false&format=image/jpeg&width=468&height=432`,
-                speechContent: `夫洛里達州是美國最南端的一個州，亦屬於墨西哥灣沿岸地區，是美國人口第四多的州，為著名的避寒聖地。`
-            }, {
-                city: '北京',
-                imgSrc: `https://gibs.earthdata.nasa.gov/image-download?TIME=2015172&extent=113.3898568611419,35.34598456269282,122.5304818611419,41.25223456269282&epsg=4326&layers=MODIS_Aqua_CorrectedReflectance_TrueColor,Coastlines,Reference_Labels&opacities=1,1,1&worldfile=false&format=image/jpeg&width=1040&height=672`,
-                speechContent: `美國太空總署的中解析度成像光譜儀自1999年隨衛星Terra發射以後，一直監測地球表面情況，包括捕捉到中國大陸霧霾污染惡化的驚人狀況。照片震撼大陸民眾，有網民直呼這是「中國絕望的真相」`
-            }, {
-                city: '愛情海',
-                imgSrc: `https://gibs.earthdata.nasa.gov/image-download?TIME=2015172&extent=2.3223272795787295,35.29083627022838,16.87701477957873,46.25958627022838&epsg=4326&layers=MODIS_Aqua_CorrectedReflectance_TrueColor,Coastlines,Reference_Labels&opacities=1,1,1&worldfile=false&format=image/jpeg&width=331&height=250`,
-                speechContent: `關於愛琴海名稱的起源有各種解釋：源於古愛琴城；源於忒修斯王子的父王埃勾斯，他誤以為忒修斯死了，心碎地跳海自盡。`
-            }],
+            stopPoints: {},
             currentStop: 0
         },
         computed: {
-            city() {
-                return this.stops[this.currentStop].city
-            },
-            imgSrc() {
-                return this.stops[this.currentStop].imgSrc
-            },
-            audioSrc() {
-                let url = `http://api.voicerss.org/?key=b9ee185dd0394b7aa4e062e891e28b15&hl=zh-tw&r=6&src=${this.stops[this.currentStop].speechContent}`
-                return url
-            }
+            // city() {
+            //     return this.stops[this.currentStop].city
+            // },
+            // imgSrc() {
+            //     return this.stops[this.currentStop].imgSrc
+            // },
+            // audioSrc() {
+            //     let url = `http://api.voicerss.org/?key=b9ee185dd0394b7aa4e062e891e28b15&hl=zh-tw&r=6&src=${this.stops[this.currentStop].speechContent}`
+            //     return url
+            // }
         },
         methods: {
-            playAudio(event) {
-                console.log('playAudio')
-                document.getElementById('audio').play()
-            },
-            nextStop() {
-                console.log('receive nextStop')
-                this.currentStop += 1
-            },
-            spaceHandler() {
+            // playAudio(event) {
+            //     console.log('playAudio')
+            //     document.getElementById('audio').play()
+            // },
+            // nextStop() {
+            //     console.log('receive nextStop')
+            //     this.currentStop += 1
+            // },
+            // spaceHandler() {
+            //     $('#look-earth').trigger('click')
+            // }
+        },
+        created() {
 
-                $('#look-earth').trigger('click')
+            const vm = this
+            const today = new Date()
+
+            // Selected day to show on the map
+            let day = new Date(today.getTime())
+
+            function dayParameter() {
+                return day.toISOString().split("T")[0];
             }
+
+            let request = $.ajax({
+                "async": true,
+                "crossDomain": true,
+                method: "GET",
+                url: 'http://10.20.12.205:8000',
+                data: {
+                    satellite: 'TERRA',
+                    time: dayParameter()
+                }
+            })
+            request.done(function(res) {
+                for (let prop in res) {
+                  vm.stopPoints[prop] = res[prop]
+                }
+                console.log('requst Successfully')
+            })
+            request.fail(function(jqXHR, textStatus) {
+                console.log("Request failed: ", jqXHR)
+                console.log('Failed', textStatus)
+            })
         },
         mounted() {
             let vm = this
