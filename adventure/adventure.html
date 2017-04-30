@@ -120,7 +120,7 @@
             // city() {
             //     return this.stops[this.currentStop].city
             // },
-            // imgSrc() {
+            // imgSrc () {
             //     return this.stops[this.currentStop].imgSrc
             // },
             // audioSrc() {
@@ -144,13 +144,14 @@
         created() {
 
             const vm = this
-            const today = new Date()
-
+            let today = new Date()
             // Selected day to show on the map
-            let day = new Date(today.getTime())
 
-            function dayParameter() {
-                return day.toISOString().split("T")[0];
+
+            function dayParameter(backDay) {
+              let pickDay = new Date(today.getTime());
+              pickDay.setUTCDate(today.getUTCDate() - backDay)
+              return pickDay.toISOString().split("T")[0]
             }
 
             let request = $.ajax({
@@ -160,14 +161,14 @@
                 url: 'http://10.20.12.205:8000',
                 data: {
                     satellite: 'TERRA',
-                    time: dayParameter()
+                    time: dayParameter(-4)
                 }
             })
             request.done(function(res) {
                 for (let prop in res) {
                   vm.stopPoints[prop] = res[prop]
                 }
-                console.log('requst Successfully')
+                console.log('requst Successfully', res)
             })
             request.fail(function(jqXHR, textStatus) {
                 console.log("Request failed: ", jqXHR)
