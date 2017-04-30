@@ -13,14 +13,16 @@
     #app {
         width: 100%;
         height: 100%;
+        box-sizing: border-box;
     }
     
     .header {
-        padding: 100px 50px 200px;
+        padding: 50px;
         background-image: url('../img/bg_weather.jpg');
         position: relative;
         width: 100%;
         height: 100%;
+        box-sizing: border-box;
     }
     
     .flex-box-container {
@@ -41,16 +43,71 @@
     .flex-box-item h3,
     .flex-box-item p {
         color: rgb(255, 255, 255);
-        padding: 60px;
+        padding: 20px;
     }
     
     .panel-custom {
-        padding-top: 50px;
+        padding-top: 30px;
     }
     
     .showBox {
         width: 100%;
         height: 40%;
+        text-align: center;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    
+    .showBox img {
+        height: 600px;
+        width: auto;
+    }
+
+    .loader {
+      display: inline-block;
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      vertical-align: middle;
+      left: calc(50% - 25px);
+      top: calc(50% - 25px);
+    }
+
+        
+    .loader-double {
+      border-radius: 50px;
+      border: 6px solid transparent;
+      border-top-color: #fff;
+      border-bottom-color: #fff;
+      -webkit-animation: spin 1.5s linear infinite;
+      animation: spin 1.5s linear infinite;
+    }
+    .loader-double:before, .loader-double:after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      bottom: 5px;
+      left: 5px;
+      border-radius: 50px;
+      border: 6px solid transparent;
+      border-top-color: #fff;
+      border-bottom-color: #fff;
+      opacity: 0.6;
+      filter: alpha(opacity=60);
+      -webkit-animation: spinreverse 2s linear infinite;
+      animation: spinreverse 2s linear infinite;
+    }
+    .loader-double:before {
+      top: 15px;
+      left: 15px;
+      bottom: 15px;
+      right: 15px;
+      -webkit-animation: spinreverse 3s linear infinite;
+      animation: spinreverse 3s linear infinite;
+    }
+    .disabled {
+      cursor:not-allowed;
     }
     </style>
 </head>
@@ -70,132 +127,127 @@
         <header class="header" id="top">
             <div class="flex-box-container">
                 <div class="flex-box-item play-block">
-                    <h3>衛星名稱</h3>
+                    <h3></h3>
                     <div class='showBox'>
+                        <img @load="loadHandler($event)" :src="currentImgSrc" id="satelliteImg">
                     </div>
                 </div>
             </div>
             <div class="panel-custom col-md-8 col-md-offset-2">
                 <div class="btn-group btn-group-justified" role="group" aria-label="...">
-                    <a class="first-btn select btn btn-dark btn-lg" id="backward">前往上一站</a>
-                    <a class="select btn btn-dark btn-lg" id="pause" href="#" data-toggle="modal" data-target="#myModal" 
-                    >暫停</a>
-                    <a class="select btn btn-dark btn-lg" id="look-earth" href="#" data-toggle="modal" data-target="#myModal" 
-                    >播放</a>
-                    <a class="select btn btn-dark btn-lg" id="next-step" href="#">前往下一站</a>
+                    <a class="first-btn select btn btn-dark btn-lg" id="backward" @click="previousPoint">前往上一站</a>
+                    <a class="disabled select btn btn-dark btn-lg" id="pause" href="#" data-toggle="modal" data-target="#myModal">暫停</a>
+                    <a class="disabled select btn btn-dark btn-lg" id="look-earth" href="#" data-toggle="modal" data-target="#myModal">播放</a>
+                    <a class="select btn btn-dark btn-lg" id="next-step" href="#" @click="nextPoint">前往下一站</a>
                 </div>
             </div>
+             <!-- Loading -->
+            <section v-show="loading" class="loaders loaders-bg-2"><span class="loader loader-double"> </span></section>
         </header>
-        <!-- modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel"> 城市 </h4>
-                    </div>
-                    <div class="modal-body" style="text-align:center">
-                        <img style="width: 100%; height: auto" :src="imgSrc">
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- audio -->
-        <audio id="audio" :src="audioSrc"></audio>
+        <!--  <audio id="audio" :src="audioSrc"></audio>  -->
+       
     </div>
     <script src="https://unpkg.com/vue@2.3.0/dist/vue.js"></script>
     <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>
     <script src="https://unpkg.com/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
     <script>
-    /* eslint-disable */
     const vm = new Vue({
-        el: '#app',
-        data: {
-            stopPoints: {},
-            currentStop: 0
+      el: '#app',
+      data: {
+        satellitePoints: {},
+        currentPoint: 't1',
+        currentImgSrc: '',
+        satelliteImgLists: {},
+        loading: true
+      },
+      methods: {
+        previousPoint () {
+          let currentIndex = +this.currentPoint.slice(1)
+          currentIndex--
+          this.currentPoint = `t${currentIndex}`
+          this.loading = true
+          this.refreshCurrentSatelliteImg()
         },
-        computed: {
-            // city() {
-            //     return this.stops[this.currentStop].city
-            // },
-            // imgSrc () {
-            //     return this.stops[this.currentStop].imgSrc
-            // },
-            // audioSrc() {
-            //     let url = `http://api.voicerss.org/?key=b9ee185dd0394b7aa4e062e891e28b15&hl=zh-tw&r=6&src=${this.stops[this.currentStop].speechContent}`
-            //     return url
-            // }
+        nextPoint () {
+          let currentIndex = +this.currentPoint.slice(1)
+          currentIndex++
+          this.currentPoint = `t${currentIndex}`
+          this.loading = true
+          console.log('loading')
+          console.log('currenPoint', this.currentPoint)
+          this.refreshCurrentSatelliteImg()
         },
-        methods: {
-            // playAudio(event) {
-            //     console.log('playAudio')
-            //     document.getElementById('audio').play()
-            // },
-            // nextStop() {
-            //     console.log('receive nextStop')
-            //     this.currentStop += 1
-            // },
-            // spaceHandler() {
-            //     $('#look-earth').trigger('click')
-            // }
+        beforeToday (minusDay) {
+          let today = new Date()    // Sun Apr 30 2017 13:26:30 GMT+0800 (CST)
+          let pickDay = new Date()
+          pickDay.setUTCDate(today.getUTCDate() - minusDay)  // Wed Apr 26 2017 13:31:05 GMT+0800 (CST)
+          return pickDay.toISOString().split('T')[0]      // 2017-04-26
         },
-        created() {
-
-            const vm = this
-            let today = new Date()
-            // Selected day to show on the map
-
-
-            function dayParameter(backDay) {
-              let pickDay = new Date(today.getTime());
-              pickDay.setUTCDate(today.getUTCDate() - backDay)
-              return pickDay.toISOString().split("T")[0]
-            }
-
-            let request = $.ajax({
-                "async": true,
-                "crossDomain": true,
-                method: "GET",
-                url: 'http://10.20.12.205:8000',
-                data: {
-                    satellite: 'TERRA',
-                    time: dayParameter(-4)
-                }
-            })
-            request.done(function(res) {
-                for (let prop in res) {
-                  vm.stopPoints[prop] = res[prop]
-                }
-                console.log('requst Successfully', res)
-            })
-            request.fail(function(jqXHR, textStatus) {
-                console.log("Request failed: ", jqXHR)
-                console.log('Failed', textStatus)
-            })
+        loadHandler (e) {
+          this.loading = false
         },
-        mounted() {
-            let vm = this
-            document.addEventListener('keydown', function(e) {
-                e.preventDefault()
-            })
-            document.addEventListener('keyup', function(e) {
-                e.preventDefault()
-                console.log(e.keyCode)
+        createSatelliteImgLists () {
+          console.log('start createSatelliteImgLists')
+          let requestUrl = 'https://gibs.earthdata.nasa.gov/image-download?'
+          let boundingRect = {}
+          let theDay
+          let layers = 'VIIRS_SNPP_CorrectedReflectance_TrueColor,MODIS_Aqua_CorrectedReflectance_TrueColor,MOPITT_CO_Daily_Surface_Mixing_Ratio_Day,Reference_Labels,Reference_Features'
+          let opacities = Array(layers.split(',').length).fill(1)
+          let query
+          let width = 700
+          let height = 590
+          let satelliteImgList = {}
 
-                if (e.keyCode === 32) {
-                    // Space
-                    vm.spaceHandler()
-                } else if (e.keyCode === 39) {
-                    // Right 
-                    console.log('emit nextStop')
-                    vm.nextStop()
-                } else {
-                    console.log('請按空白鍵來觀看地球；按向上鍵來前往下一站')
-                }
-            })
+          for (let prop in this.satellitePoints) {
+            theDay = this.satellitePoints[prop].time.split(' ')[0]
+            boundingRect.bottomLeftLon = this.satellitePoints[prop].bottomLeftLon
+            boundingRect.bottomLeftLat = this.satellitePoints[prop].bottomLeftLat
+            boundingRect.topRightLon = this.satellitePoints[prop].topRightLon
+            boundingRect.topRightLat = this.satellitePoints[prop].topRightLat
+
+            query = `TIME=${theDay}&extent=${boundingRect.bottomLeftLon},${boundingRect.bottomLeftLat},${boundingRect.topRightLon},${boundingRect.topRightLat}&epsg=4326&layers=${layers}&opacities=${opacities}&worldfile=false&format=image/jpeg&width=${width}&height=${height}`
+
+            satelliteImgList[prop] = requestUrl + query
+          }
+          this.satelliteImgLists = satelliteImgList
+        },
+        refreshCurrentSatelliteImg () {
+          console.log('refresh')
+          this.currentImgSrc = this.satelliteImgLists[this.currentPoint]
         }
+      },
+      created () {
+        const self = this
+        this.loading = true
+        // send requst to get satellitePoints
+        let request = $.ajax({
+          async: true,
+          crossDomain: true,
+          method: 'GET',
+          url: 'http://10.20.12.205:8000',
+          data: {
+            satellite: 'TERRA',
+            time: self.beforeToday(240)
+          }
+        })
+
+        request.done(function (res) {
+          this.loading = false
+          console.log('get requests')
+
+          self.satellitePoints = res
+
+          console.log('get requests--f', res)
+
+          self.createSatelliteImgLists()
+          self.refreshCurrentSatelliteImg()
+        })
+
+        request.fail(function (jqXHR, textStatus) {
+          console.log('Request failed: ', jqXHR)
+        })
+      }
     })
     </script>
 </body>
